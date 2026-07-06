@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Tio Rick - Educação Financeira na Prática</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --verde-900:#0F3D24;
+  --verde-700:#146B3A;
+  --verde-600:#1B8A48;
+  --verde-500:#25A559;
+  --verde-100:#E4F5EA;
+  --preto:#101214;
+  --cinza-900:#1B1F22;
+  --cinza-700:#3A4148;
+  --cinza-500:#6B7480;
+  --cinza-200:#E4E8E6;
+  --cinza-100:#F3F6F4;
+  --branco:#FFFFFF;
+  --amarelo:#E3A73B;
+  --vermelho:#D9534F;
+  --font-display:'Poppins', 'Segoe UI', sans-serif;
+  --font-body:'Inter', 'Segoe UI', sans-serif;
+  --radius:14px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;background:var(--cinza-100);font-family:var(--font-body);color:var(--preto);}
+#app{min-height:100vh;display:flex;flex-direction:column;}
+
+/* ---------- LOGIN ---------- */
+.login-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 30% 20%, var(--verde-700) 0%, var(--preto) 65%);
+  padding:24px;
+}
+.login-card{
+  background:var(--branco);border-radius:20px;padding:38px 34px 30px;
+  width:100%;max-width:400px;box-shadow:0 24px 60px rgba(0,0,0,0.45);
+  text-align:center;
+}
+.login-avatar{
+  width:104px;height:104px;border-radius:50%;object-fit:cover;
+  border:4px solid var(--verde-500);margin:-72px auto 14px;display:block;
+  box-shadow:0 8px 20px rgba(0,0,0,0.3);background:var(--branco);
+}
+.login-brand{font-family:var(--font-display);font-weight:800;font-size:26px;color:var(--verde-700);margin:0;}
+.login-sub{font-size:13px;color:var(--cinza-500);margin:2px 0 22px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;}
+.field{text-align:left;margin-bottom:14px;}
+.field label{font-size:12px;font-weight:700;color:var(--cinza-700);display:block;margin-bottom:5px;}
+.field input, .field select{
+  width:100%;padding:11px 13px;border-radius:10px;border:1.5px solid var(--cinza-200);
+  font-size:14px;font-family:var(--font-body);background:var(--cinza-100);
+}
+.field input:focus, .field select:focus{outline:none;border-color:var(--verde-500);background:var(--branco);}
+.btn{
+  display:inline-block;border:none;border-radius:10px;padding:12px 18px;font-weight:700;
+  font-size:14px;cursor:pointer;font-family:var(--font-body);transition:transform .08s ease, opacity .15s;
+}
+.btn:active{transform:scale(0.97);}
+.btn-primary{background:var(--verde-600);color:var(--branco);width:100%;}
+.btn-primary:hover{background:var(--verde-700);}
+.btn-outline{background:transparent;color:var(--verde-700);border:1.5px solid var(--verde-500);width:100%;margin-top:8px;}
+.btn-dark{background:var(--preto);color:var(--branco);}
+.btn-small{padding:7px 12px;font-size:12.5px;border-radius:8px;}
+.btn-danger{background:var(--vermelho);color:var(--branco);}
+.login-msg{font-size:12.5px;color:var(--vermelho);font-weight:600;min-height:16px;margin-bottom:6px;}
+.login-toggle{margin-top:14px;font-size:12.5px;color:var(--cinza-500);}
+.login-toggle a{color:var(--verde-700);font-weight:700;cursor:pointer;text-decoration:none;}
+
+/* ---------- APP SHELL ---------- */
+.topbar{
+  background:var(--preto);color:var(--branco);display:flex;align-items:center;
+  justify-content:space-between;padding:12px 22px;position:sticky;top:0;z-index:20;
+}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid var(--verde-500);}
+.topbar-name{font-family:var(--font-display);font-weight:700;font-size:15px;}
+.topbar-name span{display:block;font-size:11px;font-weight:500;color:var(--cinza-200);font-family:var(--font-body);}
+.logout-btn{
+  background:var(--vermelho);color:var(--branco);border:none;border-radius:8px;
+  padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;
+}
+.logout-btn:hover{opacity:.88;}
+
+.tabs{
+  background:var(--verde-900);display:flex;overflow-x:auto;padding:0 10px;
+  scrollbar-width:thin;
+}
+.tab-btn{
+  background:transparent;border:none;color:var(--cinza-200);padding:13px 16px;
+  font-family:var(--font-body);font-weight:600;font-size:13.5px;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;
+}
+.tab-btn.active{color:var(--branco);border-bottom:3px solid var(--verde-500);background:rgba(255,255,255,0.05);}
+.tab-btn.teacher{color:var(--amarelo);}
+.tab-btn.teacher.active{border-bottom-color:var(--amarelo);}
+
+.content{flex:1;padding:22px;max-width:1080px;margin:0 auto;width:100%;}
+
+.card{background:var(--branco);border-radius:var(--radius);padding:20px;margin-bottom:18px;box-shadow:0 2px 10px rgba(20,30,25,0.06);border:1px solid var(--cinza-200);}
+.card-title{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--verde-900);margin:0 0 14px;display:flex;align-items:center;gap:8px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media(max-width:820px){.grid-3,.grid-4{grid-template-columns:1fr;}.grid-2{grid-template-columns:1fr;}}
+
+.subtotal-tag{background:var(--verde-100);color:var(--verde-800,#146B3A);font-weight:700;padding:6px 10px;border-radius:8px;font-size:13px;display:inline-block;}
+.list-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--cinza-200);font-size:13.5px;}
+.list-row:last-child{border-bottom:none;}
+.list-row .desc{font-weight:600;}
+.list-row .meta{color:var(--cinza-500);font-size:11.5px;}
+.list-row .val{font-weight:700;}
+.del-btn{background:none;border:none;color:var(--vermelho);cursor:pointer;font-size:15px;padding:2px 6px;}
+.badge{display:inline-block;background:var(--verde-100);color:var(--verde-700);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-right:6px;}
+.small-form{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.small-form input, .small-form select{flex:1;min-width:100px;padding:9px 10px;border-radius:8px;border:1.5px solid var(--cinza-200);font-size:13px;background:var(--cinza-100);}
+
+.gauge-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.progress-outer{background:var(--cinza-200);border-radius:20px;height:14px;width:100%;overflow:hidden;}
+.progress-inner{height:100%;border-radius:20px;transition:width .3s ease;}
+.stat-box{background:var(--verde-100);border-radius:12px;padding:14px 16px;text-align:center;}
+.stat-box .num{font-family:var(--font-display);font-weight:800;font-size:20px;color:var(--verde-900);}
+.stat-box .lbl{font-size:11.5px;color:var(--cinza-700);font-weight:600;}
+
+.obj-card{border:1.5px solid var(--cinza-200);border-radius:12px;padding:14px 16px;margin-bottom:12px;}
+.obj-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.obj-title{font-weight:700;font-size:14.5px;}
+.obj-type{font-size:11px;color:var(--branco);background:var(--verde-600);padding:2px 9px;border-radius:12px;font-weight:700;}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(10,15,12,0.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal-box{background:var(--branco);border-radius:16px;padding:26px;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.4);}
+.modal-icon{font-size:38px;margin-bottom:6px;}
+.modal-title{font-family:var(--font-display);font-weight:800;font-size:18px;margin:0 0 8px;}
+.modal-text{font-size:14px;color:var(--cinza-700);margin-bottom:18px;line-height:1.5;}
+
+.result-card{border-radius:12px;padding:16px;background:var(--verde-900);color:var(--branco);}
+.result-card .num{font-family:var(--font-display);font-weight:800;font-size:22px;}
+.result-card .lbl{font-size:11.5px;color:var(--cinza-200);}
+
+.teacher-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border:1.5px solid var(--cinza-200);border-radius:10px;margin-bottom:8px;cursor:pointer;}
+.teacher-row:hover{border-color:var(--verde-500);background:var(--verde-100);}
+.section-lbl{font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--verde-700);text-transform:uppercase;letter-spacing:.4px;margin:0 0 10px;}
+.empty-msg{color:var(--cinza-500);font-size:13px;font-style:italic;padding:10px 0;}
+.readonly-note{background:var(--amarelo);color:var(--preto);font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;display:inline-block;margin-bottom:14px;}
+a{color:inherit;}
+.hint{font-size:11.5px;color:var(--cinza-500);margin-top:6px;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+/* ======================================================================
+   CONFIGURAÇÃO DO FIREBASE — COLOQUE AQUI OS DADOS DO SEU PROJETO
+   Siga o passo a passo enviado para gerar esses dados gratuitamente em
+   https://console.firebase.google.com e cole-os substituindo os valores
+   abaixo. Sem isso, o aplicativo não vai conseguir salvar dados.
+====================================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyAoy3MvSz6Wfgjgiz49UFS1qNbYzctozrw",
+  authDomain: "tio-rick-educa-d354e.firebaseapp.com",
+  projectId: "tio-rick-educa-d354e",
+  storageBucket: "tio-rick-educa-d354e.firebasestorage.app",
+  messagingSenderId: "873492347868",
+  appId: "1:873492347868:web:7656a59b679a569eeded19"
+};
+let db = null;
+let firebaseReady = false;
+try{
+  if(firebaseConfig.apiKey !== "SUA_API_KEY_AQUI"){
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    firebaseReady = true;
+  }
+}catch(e){ console.error("Erro ao iniciar Firebase:", e); }
+const AVATAR_SRC = "data:image/jpeg;base64,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";
+const TEACHER_EMAIL = "ricksonalveseefd@gmail.com";
+const DEFAULT_CATEGORIAS = ["Supermercado","iFood","Farmácia","Transporte","Lazer","Educação","Saúde","Assinaturas","Outros"];
+const TAXAS_REF = { cdi:14.15, selic:14.25, ipca:4.72, poupanca:8.17 };
+
+let state = { currentUser:null, data:null, activeTab:'inicio', teacherViewing:null, teacherViewingData:null, registerMode:false };
+let alertQueue = [];
+
+/* ---------- storage helpers ---------- */
+async function sGet(key){
+  if(!db) return null;
+  try{
+    const doc = await db.collection('tiorick').doc(key).get();
+    return doc.exists ? doc.data().value : null;
+  }catch(e){ console.error(e); return null; }
+}
+async function sSet(key, value){
+  if(!db) return false;
+  try{
+    await db.collection('tiorick').doc(key).set({ value: value });
+    return true;
+  }catch(e){ console.error(e); return false; }
+}
+function safeKey(email){ return "tiorick_student_" + email.toLowerCase().trim(); }
+
+async function getUsers(){ const u = await sGet('tiorick_users'); return u || []; }
+async function saveUsers(list){ return sSet('tiorick_users', list); }
+async function getStudentData(email){ return sGet(safeKey(email)); }
+async function saveStudentData(email, data){ return sSet(safeKey(email), data); }
+
+function defaultStudentData(name, email){
+  return {
+    profile:{name,email},
+    patrimonio:{pessoal:[], familiar:[], conjuge:[]},
+    despesasCategorias: DEFAULT_CATEGORIAS.slice(),
+    receitas:[],
+    despesas:[],
+    objetivos:[],
+    alertState:{ gastoMes:{mes:null, shown:{50:false,75:false,90:false}}, objetivos:{} }
+  };
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function formatBRL(v){ return (Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function monthKeyOf(dateStr){ return (dateStr||todayStr()).slice(0,7); }
+function currentMonthKey(){ return todayStr().slice(0,7); }
+function sum(arr){ return arr.reduce((a,b)=>a+(Number(b)||0),0); }
+
+/* ---------- render root ---------- */
+function render(){
+  const app = document.getElementById('app');
+  if(!state.currentUser){
+    app.innerHTML = screenLogin();
+    return;
+  }
+  app.innerHTML = screenApp();
+}
+
+/* ================= LOGIN / REGISTER ================= */
+function screenLogin(){
+  if(state.registerMode){
+    return `
+    <div class="login-wrap">
+      <div class="login-card">
+        <img class="login-avatar" src="${AVATAR_SRC}" alt="Tio Rick"/>
+        <h1 class="login-brand">Tio Rick</h1>
+        <p class="login-sub">Educação Financeira na Prática</p>
+        <div class="login-msg" id="loginMsg"></div>
+        <div class="field"><label>Nome completo</label><input id="regNome" type="text" placeholder="Seu nome"/></div>
+        <div class="field"><label>E-mail</label><input id="regEmail" type="email" placeholder="seuemail@exemplo.com"/></div>
+        <div class="field"><label>Senha</label><input id="regSenha" type="password" placeholder="Crie uma senha"/></div>
+        <div class="field"><label>Confirmar senha</label><input id="regSenha2" type="password" placeholder="Repita a senha"/></div>
+        <button class="btn btn-primary" onclick="doRegister()">Criar minha conta</button>
+        <div class="login-toggle">Já tem conta? <a onclick="toggleRegister(false)">Fazer login</a></div>
+      </div>
+    </div>`;
+  }
+  return `
+  <div class="login-wrap">
+    <div class="login-card">
+      <img class="login-avatar" src="${AVATAR_SRC}" alt="Tio Rick"/>
+      <h1 class="login-brand">Tio Rick</h1>
+      <p class="login-sub">Educação Financeira na Prática</p>
+      <div class="login-msg" id="loginMsg"></div>
+      <div class="field"><label>E-mail</label><input id="loginEmail" type="email" placeholder="seuemail@exemplo.com"/></div>
+      <div class="field"><label>Senha</label><input id="loginSenha" type="password" placeholder="Sua senha"/></div>
+      <button class="btn btn-primary" onclick="doLogin()">Entrar</button>
+      <div class="login-toggle">Primeiro acesso? <a onclick="toggleRegister(true)">Cadastre-se</a></div>
+    </div>
+  </div>`;
+}
+function toggleRegister(v){ state.registerMode = v; render(); }
+
+async function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const senha = document.getElementById('loginSenha').value;
+  const msg = document.getElementById('loginMsg');
+  if(!email || !senha){ msg.textContent = "Preencha e-mail e senha."; return; }
+  const users = await getUsers();
+  const user = users.find(u=>u.email.toLowerCase()===email);
+  if(!user){ msg.textContent = "Usuário não encontrado. Cadastre-se primeiro."; return; }
+  if(user.senha !== senha){ msg.textContent = "Senha incorreta."; return; }
+  const isTeacher = email === TEACHER_EMAIL;
+  state.currentUser = { email, name:user.nome, isTeacher };
+  let data = await getStudentData(email);
+  if(!data){ data = defaultStudentData(user.nome, email); await saveStudentData(email, data); }
+  state.data = data;
+  state.activeTab = 'inicio';
+  render();
+}
+
+async function doRegister(){
+  const nome = document.getElementById('regNome').value.trim();
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const senha = document.getElementById('regSenha').value;
+  const senha2 = document.getElementById('regSenha2').value;
+  const msg = document.getElementById('loginMsg');
+  if(!nome || !email || !senha){ msg.textContent = "Preencha todos os campos."; return; }
+  if(senha !== senha2){ msg.textContent = "As senhas não coincidem."; return; }
+  const users = await getUsers();
+  if(users.find(u=>u.email.toLowerCase()===email)){ msg.textContent = "Este e-mail já está cadastrado. Faça login."; return; }
+  users.push({ nome, email, senha });
+  await saveUsers(users);
+  const isTeacher = email === TEACHER_EMAIL;
+  const data = defaultStudentData(nome, email);
+  await saveStudentData(email, data);
+  state.data = data;
+  state.currentUser = { email, name:nome, isTeacher };
+  state.activeTab = 'inicio';
+  state.registerMode = false;
+  render();
+}
+
+function doLogout(){
+  state.currentUser = null; state.data = null; state.activeTab='inicio';
+  state.teacherViewing = null; state.teacherViewingData = null;
+  render();
+}
+
+/* ================= APP SHELL ================= */
+function screenApp(){
+  const u = state.currentUser;
+  const tabsList = [['inicio','Início'],['patrimonio','Patrimônio'],['financas','Receitas e Despesas'],['calculadora','Calculadora'],['objetivos','Objetivos']];
+  if(u.isTeacher) tabsList.push(['professor','Painel do Professor']);
+
+  const tabsHtml = tabsList.map(([id,label])=>{
+    const cls = 'tab-btn' + (state.activeTab===id?' active':'') + (id==='professor'?' teacher':'');
+    return `<button class="${cls}" onclick="switchTab('${id}')">${label}</button>`;
+  }).join('');
+
+  let body = '';
+  switch(state.activeTab){
+    case 'inicio': body = renderInicio(state.data); break;
+    case 'patrimonio': body = renderPatrimonio(state.data, false); break;
+    case 'financas': body = renderFinancas(state.data, false); break;
+    case 'calculadora': body = renderCalculadora(); break;
+    case 'objetivos': body = renderObjetivos(state.data, false); break;
+    case 'professor': body = renderProfessor(); break;
+  }
+
+  return `
+  <div class="topbar">
+    <div class="topbar-left">
+      <img class="topbar-avatar" src="${AVATAR_SRC}"/>
+      <div class="topbar-name">${u.name}<span>${u.isTeacher?'Professor · Tio Rick':'Turma Educação Financeira na Prática'}</span></div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">⏻ Sair</button>
+  </div>
+  <div class="tabs">${tabsHtml}</div>
+  <div class="content">${body}</div>
+  <div id="modalHolder"></div>
+  `;
+}
+function switchTab(id){ state.activeTab = id; render(); if(id==='financas'){ runGastoCheck(); } }
+
+/* ================= INÍCIO ================= */
+function renderInicio(data){
+  const patTotal = sum(data.patrimonio.pessoal.map(i=>i.valor)) + sum(data.patrimonio.familiar.map(i=>i.valor)) + sum(data.patrimonio.conjuge.map(i=>i.valor));
+  const mk = currentMonthKey();
+  const receitaMes = sum(data.receitas.filter(r=>monthKeyOf(r.data)===mk).map(r=>r.valor));
+  const gastoMes = sum(data.despesas.filter(d=>monthKeyOf(d.data)===mk).map(d=>d.valor));
+  const pct = receitaMes>0 ? Math.min(999,(gastoMes/receitaMes)*100) : 0;
+  const objAtivos = data.objetivos.length;
+  return `
+  <div class="card">
+    <p class="card-title">👋 Olá, ${data.profile.name.split(' ')[0]}!</p>
+    <div class="grid-4">
+      <div class="stat-box"><div class="num">${formatBRL(patTotal)}</div><div class="lbl">Patrimônio total</div></div>
+      <div class="stat-box"><div class="num">${formatBRL(receitaMes)}</div><div class="lbl">Receita do mês</div></div>
+      <div class="stat-box"><div class="num">${formatBRL(gastoMes)}</div><div class="lbl">Gasto do mês</div></div>
+      <div class="stat-box"><div class="num">${objAtivos}</div><div class="lbl">Objetivos ativos</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <p class="card-title">📊 Percentual da receita já comprometido este mês</p>
+    ${gaugeBar(pct)}
+    <p class="hint">${receitaMes<=0 ? 'Registre uma receita na aba "Receitas e Despesas" para acompanhar seu percentual gasto.' : ''}</p>
+  </div>
+  <div class="card">
+    <p class="card-title">🎯 Seus objetivos</p>
+    ${data.objetivos.length===0 ? '<p class="empty-msg">Nenhum objetivo cadastrado ainda. Vá até a aba Objetivos para adicionar.</p>' :
+      data.objetivos.slice(0,3).map(o=>objetivoMini(o)).join('')}
+  </div>
+  `;
+}
+function objetivoMini(o){
+  const pct = o.valorAlvo>0 ? Math.min(100,(o.valorAtual/o.valorAlvo)*100) : 0;
+  return `<div style="margin-bottom:10px;">
+    <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;">
+      <span>${o.nome}</span><span>${pct.toFixed(0)}%</span>
+    </div>
+    <div class="progress-outer"><div class="progress-inner" style="width:${pct}%;background:${barColor(pct,true)}"></div></div>
+  </div>`;
+}
+function gaugeBar(pct){
+  const color = barColor(pct,false);
+  return `<div class="gauge-wrap">
+    <div style="flex:1;">
+      <div class="progress-outer"><div class="progress-inner" style="width:${Math.min(100,pct)}%;background:${color}"></div></div>
+    </div>
+    <div style="font-family:var(--font-display);font-weight:800;font-size:22px;color:${color};min-width:70px;text-align:right;">${pct.toFixed(0)}%</div>
+  </div>`;
+}
+function barColor(pct, isGoal){
+  if(isGoal){ // goals: closer to target = better (green)
+    if(pct>=90) return 'var(--verde-600)';
+    if(pct>=50) return 'var(--amarelo)';
+    return 'var(--cinza-500)';
+  }
+  if(pct>=90) return 'var(--vermelho)';
+  if(pct>=75) return 'var(--amarelo)';
+  if(pct>=50) return '#4A90D9';
+  return 'var(--verde-500)';
+}
+
+/* ================= PATRIMÔNIO ================= */
+function patrimonioSection(data, key, label, readOnly){
+  const items = data.patrimonio[key];
+  const total = sum(items.map(i=>i.valor));
+  return `
+  <div class="card">
+    <p class="card-title">${label}</p>
+    <span class="subtotal-tag">Subtotal: ${formatBRL(total)}</span>
+    <div style="margin-top:12px;">
+    ${items.length===0 ? '<p class="empty-msg">Nenhum item cadastrado.</p>' :
+      items.map(i=>`<div class="list-row"><span class="desc">${i.nome}</span><span style="display:flex;align-items:center;gap:10px;"><span class="val">${formatBRL(i.valor)}</span>${readOnly?'':`<button class="del-btn" onclick="delPatrimonio('${key}','${i.id}')">✕</button>`}</span></div>`).join('')}
+    </div>
+    ${readOnly?'':`
+    <div class="small-form">
+      <input id="pat_${key}_nome" placeholder="Descrição (ex: Imóvel, Carro, Reserva)"/>
+      <input id="pat_${key}_valor" type="number" placeholder="Valor (R$)" step="0.01"/>
+      <button class="btn btn-primary btn-small" onclick="addPatrimonio('${key}')">Adicionar</button>
+    </div>`}
+  </div>`;
+}
+function renderPatrimonio(data, readOnly){
+  const total = sum(data.patrimonio.pessoal.map(i=>i.valor)) + sum(data.patrimonio.familiar.map(i=>i.valor)) + sum(data.patrimonio.conjuge.map(i=>i.valor));
+  return `
+  ${readOnly?'<div class="readonly-note">Modo de visualização do professor — somente leitura</div>':''}
+  <div class="card">
+    <p class="card-title">💰 Patrimônio total</p>
+    <div class="stat-box" style="max-width:260px;"><div class="num">${formatBRL(total)}</div><div class="lbl">Soma de pessoal + familiar + cônjuge</div></div>
+  </div>
+  <div class="grid-3">
+    ${patrimonioSection(data,'pessoal','👤 Pessoal',readOnly)}
+    ${patrimonioSection(data,'familiar','👨‍👩‍👧 Familiar',readOnly)}
+    ${patrimonioSection(data,'conjuge','💍 Cônjuge',readOnly)}
+  </div>`;
+}
+async function addPatrimonio(key){
+  const nomeEl = document.getElementById(`pat_${key}_nome`);
+  const valorEl = document.getElementById(`pat_${key}_valor`);
+  const nome = nomeEl.value.trim(); const valor = parseFloat(valorEl.value);
+  if(!nome || isNaN(valor)) return;
+  state.data.patrimonio[key].push({id:uid(), nome, valor});
+  await saveStudentData(state.currentUser.email, state.data);
+  render();
+}
+async function delPatrimonio(key,id){
+  state.data.patrimonio[key] = state.data.patrimonio[key].filter(i=>i.id!==id);
+  await saveStudentData(state.currentUser.email, state.data);
+  render();
+}
+
+/* ================= RECEITAS E DESPESAS ================= */
+function renderFinancas(data, readOnly){
+  const mk = currentMonthKey();
+  const receitasMes = data.receitas.filter(r=>monthKeyOf(r.data)===mk);
+  const despesasMes = data.despesas.filter(d=>monthKeyOf(d.data)===mk);
+  const receitaMesTotal = sum(receitasMes.map(r=>r.valor));
+  const gastoMesTotal = sum(despesasMes.map(d=>d.valor));
+  const pct = receitaMesTotal>0 ? (gastoMesTotal/receitaMesTotal)*100 : 0;
+
+  const catTotals = {};
+  despesasMes.forEach(d=>{ catTotals[d.categoria] = (catTotals[d.categoria]||0)+d.valor; });
+
+  const catOptions = data.despesasCategorias.map(c=>`<option value="${c}">${c}</option>`).join('');
+
+  return `
+  ${readOnly?'<div class="readonly-note">Modo de visualização do professor — somente leitura</div>':''}
+  <div class="card">
+    <p class="card-title">📈 Percentual da receita já gasto no mês</p>
+    ${gaugeBar(pct)}
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="stat-box"><div class="num">${formatBRL(receitaMesTotal)}</div><div class="lbl">Receita do mês</div></div>
+      <div class="stat-box"><div class="num">${formatBRL(gastoMesTotal)}</div><div class="lbl">Gasto do mês</div></div>
+      <div class="stat-box"><div class="num">${formatBRL(receitaMesTotal-gastoMesTotal)}</div><div class="lbl">Saldo do mês</div></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <p class="card-title">💵 Receitas</p>
+      ${data.receitas.length===0?'<p class="empty-msg">Nenhuma receita lançada.</p>':
+        data.receitas.slice().reverse().map(r=>`<div class="list-row"><span class="desc">${r.descricao}<div class="meta">${formatDate(r.data)}</div></span><span style="display:flex;align-items:center;gap:10px;"><span class="val">${formatBRL(r.valor)}</span>${readOnly?'':`<button class="del-btn" onclick="delReceita('${r.id}')">✕</button>`}</span></div>`).join('')}
+      ${readOnly?'':`
+      <div class="small-form">
+        <input id="rec_desc" placeholder="Descrição (ex: Salário, Freelance)"/>
+        <input id="rec_valor" type="number" placeholder="Valor (R$)" step="0.01"/>
+        <input id="rec_data" type="date" value="${todayStr()}"/>
+        <button class="btn btn-primary btn-small" onclick="addReceita()">Adicionar</button>
+      </div>`}
+    </div>
+
+    <div class="card">
+      <p class="card-title">🧾 Despesas</p>
+      ${data.despesas.length===0?'<p class="empty-msg">Nenhuma despesa lançada.</p>':
+        data.despesas.slice().reverse().slice(0,12).map(d=>`<div class="list-row"><span class="desc"><span class="badge">${d.categoria}</span>${d.descricao}<div class="meta">${formatDate(d.data)}</div></span><span style="display:flex;align-items:center;gap:10px;"><span class="val">${formatBRL(d.valor)}</span>${readOnly?'':`<button class="del-btn" onclick="delDespesa('${d.id}')">✕</button>`}</span></div>`).join('')}
+      ${readOnly?'':`
+      <div class="small-form">
+        <select id="desp_cat">${catOptions}</select>
+        <input id="desp_desc" placeholder="Descrição"/>
+        <input id="desp_valor" type="number" placeholder="Valor (R$)" step="0.01"/>
+        <input id="desp_data" type="date" value="${todayStr()}"/>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-primary btn-small" onclick="addDespesa()">Adicionar despesa</button>
+      </div>
+      <div class="small-form" style="margin-top:8px;">
+        <input id="nova_cat_input" placeholder="Nome de uma nova categoria"/>
+        <button class="btn btn-outline btn-small" style="width:auto;" onclick="addCategoria()">+ Adicionar categoria</button>
+      </div>`}
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="card-title">📂 Gastos por categoria neste mês</p>
+    ${Object.keys(catTotals).length===0?'<p class="empty-msg">Sem despesas registradas neste mês.</p>':
+      Object.entries(catTotals).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>`<div class="list-row"><span class="desc">${cat}</span><span class="val">${formatBRL(val)}</span></div>`).join('')}
+  </div>
+  `;
+}
+function formatDate(d){ if(!d) return ''; const [y,m,day]=d.split('-'); return `${day}/${m}/${y}`; }
+
+async function addReceita(){
+  const descricao = document.getElementById('rec_desc').value.trim();
+  const valor = parseFloat(document.getElementById('rec_valor').value);
+  const data_ = document.getElementById('rec_data').value || todayStr();
+  if(!descricao || isNaN(valor)) return;
+  state.data.receitas.push({id:uid(), descricao, valor, data:data_});
+  await saveStudentData(state.currentUser.email, state.data);
+  render();
+  runGastoCheck();
+}
+async function delReceita(id){
+  state.data.receitas = state.data.receitas.filter(r=>r.id!==id);
+  await saveStudentData(state.currentUser.email, state.data);
+  render();
+}
+async function addDespesa(){
+  const categoria = document.getElementById('desp_cat').value;
+  const descricao = document.getElementById('desp_desc').value.trim();
+  const valor = parseFloat(document.getElementById('desp_valor').value);
+  const data_ = document.getElementById('desp_data').value || todayStr();
+  if(!descricao || isNaN(valor)) return;
+  state.data.despesas.push({id:uid(), categoria, descricao, valor, data:data_});
+  await saveStudentData(state.currentUser.email, state.data);
+  render();
+  runGastoCheck();
+}
+async function delDespesa(id){
+  state.data.despesas = state.data.despesas.filter(d=>d.id!==id);
+  await saveStudentData(state.currentUser.email, state.data);
+  render();
+}
+async function addCategoria(){
+  const input = document.getElementById('nova_cat_input');
+  const trimmed = input.value.trim();
+  if(!trimmed) return;
+  if(!state.data.despesasCategorias.includes(trimmed)){
+    state.data.despesasCategorias.push(trimmed);
+    await saveStudentData(state.currentUser.email, state.data);
+  }
+  render();
+}
+
+async function runGastoCheck(){
+  const data = state.data;
+  if(!data) return;
+  const mk = currentMonthKey();
+  if(data.alertState.gastoMes.mes !== mk){
+    data.alertState.gastoMes = {mes:mk, shown:{50:false,75:false,90:false}};
+  }
+  const receitaMes = sum(data.receitas.filter(r=>monthKeyOf(r.data)===mk).map(r=>r.valor));
+  const gastoMes = sum(data.despesas.filter(d=>monthKeyOf(d.data)===mk).map(d=>d.valor));
+  if(receitaMes<=0) return;
+  const pct = (gastoMes/receitaMes)*100;
+  let changed = false;
+  [90,75,50].forEach(th=>{
+    if(pct>=th && !data.alertState.gastoMes.shown[th]){
+      data.alertState.gastoMes.shown[th]=true;
+      changed = true;
+      queueAlert(gastoAlertHtml(th,pct));
+    }
+  });
+  if(changed) await saveStudentData(state.currentUser.email, data);
+}
+function gastoAlertHtml(th,pct){
+  const cor = th>=90?'var(--vermelho)':(th>=75?'var(--amarelo)':'#4A90D9');
+  const icon = th>=90?'🚨':(th>=75?'⚠️':'📌');
+  const texto = th>=90 ? 'Atenção! Você já comprometeu 90% ou mais da sua receita mensal com despesas. Revise seus gastos com cuidado.'
+    : th>=75 ? 'Você já gastou 75% ou mais da sua receita mensal. Fique de olho no que ainda falta no mês.'
+    : 'Você já gastou 50% ou mais da sua receita mensal. Um bom momento para planejar o restante do mês.';
+  return `<div class="modal-icon">${icon}</div><h3 class="modal-title" style="color:${cor}">Alerta de gastos: ${th}%</h3><p class="modal-text">${texto}<br><br>Percentual atual: <b>${pct.toFixed(1)}%</b> da receita do mês.</p>`;
+}
+
+/* ================= CALCULADORA ================= */
+function renderCalculadora(){
+  return `
+  <div class="card">
+    <p class="card-title">🧮 Calculadora de Investimentos</p>
+    <p class="hint">Índices de referência (julho/2026): CDI ${TAXAS_REF.cdi}% a.a. · Selic ${TAXAS_REF.selic}% a.a. · IPCA ${TAXAS_REF.ipca}% a.a. · Poupança ${TAXAS_REF.poupanca}% a.a. Ajuste conforme boletins mais recentes.</p>
+    <div class="grid-3" style="margin-top:14px;">
+      <div class="field"><label>Capital inicial (R$)</label><input id="calc_capital" type="number" value="1000" step="0.01"/></div>
+      <div class="field"><label>Aporte mensal (R$)</label><input id="calc_aporte" type="number" value="200" step="0.01"/></div>
+      <div class="field"><label>Prazo (meses)</label><input id="calc_prazo" type="number" value="12" step="1"/></div>
+    </div>
+    <p class="section-lbl" style="margin-top:6px;">Compare até duas opções de investimento</p>
+    <div class="grid-2">
+      <div class="field">
+        <label>Investimento A</label>
+        <select id="calc_taxaA" onchange="toggleCustom('A')">
+          <option value="cdi">CDI (${TAXAS_REF.cdi}% a.a.)</option>
+          <option value="selic">Selic (${TAXAS_REF.selic}% a.a.)</option>
+          <option value="ipca">IPCA (${TAXAS_REF.ipca}% a.a.)</option>
+          <option value="poupanca">Poupança (${TAXAS_REF.poupanca}% a.a.)</option>
+          <option value="custom">Personalizada</option>
+        </select>
+        <input id="calc_customA" type="number" placeholder="Taxa anual % personalizada" style="display:none;margin-top:8px;"/>
+      </div>
+      <div class="field">
+        <label>Investimento B</label>
+        <select id="calc_taxaB" onchange="toggleCustom('B')">
+          <option value="selic">Selic (${TAXAS_REF.selic}% a.a.)</option>
+          <option value="cdi">CDI (${TAXAS_REF.cdi}% a.a.)</option>
+          <option value="ipca">IPCA (${TAXAS_REF.ipca}% a.a.)</option>
+          <option value="poupanca">Poupança (${TAXAS_REF.poupanca}% a.a.)</option>
+          <option value="custom">Personalizada</option>
+        </select>
+        <input id="calc_customB" type="number" placeholder="Taxa anual % personalizada" style="display:none;margin-top:8px;"/>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:auto;padding:12px 26px;" onclick="calcular()">Calcular e comparar</button>
+    <div id="calcResultado" class="grid-2" style="margin-top:18px;"></div>
+  </div>`;
+}
+function toggleCustom(letra){
+  const sel = document.getElementById('calc_taxa'+letra).value;
+  document.getElementById('calc_custom'+letra).style.display = sel==='custom' ? 'block' : 'none';
+}
+function taxaAnualDe(letra){
+  const sel = document.getElementById('calc_taxa'+letra).value;
+  if(sel==='custom'){ return parseFloat(document.getElementById('calc_custom'+letra).value) || 0; }
+  return TAXAS_REF[sel];
+}
+function investResult(capital, aporte, meses, taxaAnual){
+  const rm = Math.pow(1+taxaAnual/100, 1/12) - 1;
+  let saldo = capital;
+  for(let i=0;i<meses;i++){ saldo = saldo*(1+rm) + aporte; }
+  const totalInvestido = capital + aporte*meses;
+  const juros = saldo - totalInvestido;
+  return { saldo, totalInvestido, juros };
+}
+function calcular(){
+  const capital = parseFloat(document.getElementById('calc_capital').value)||0;
+  const aporte = parseFloat(document.getElementById('calc_aporte').value)||0;
+  const meses = parseInt(document.getElementById('calc_prazo').value)||0;
+  const taxaA = taxaAnualDe('A'), taxaB = taxaAnualDe('B');
+  const rA = investResult(capital,aporte,meses,taxaA);
+  const rB = investResult(capital,aporte,meses,taxaB);
+  const box = (label, taxa, r) => `
+    <div class="result-card">
+      <div class="lbl">${label} · taxa ${taxa.toFixed(2)}% a.a.</div>
+      <div class="num">${formatBRL(r.saldo)}</div>
+      <div class="lbl" style="margin-top:8px;">Total investido: ${formatBRL(r.totalInvestido)}</div>
+      <div class="lbl">Juros ganhos: ${formatBRL(r.juros)}</div>
+    </div>`;
+  document.getElementById('calcResultado').innerHTML = box('Investimento A',taxaA,rA) + box('Investimento B',taxaB,rB);
+}
+
+/* ================= OBJETIVOS ================= */
+function renderObjetivos(data, readOnly){
+  return `
+  ${readOnly?'<div class="readonly-note">Modo de visualização do professor — somente leitura</div>':''}
+  <div class="card">
+    <p class="card-title">🎯 Meus Objetivos</p>
+    ${data.objetivos.length===0?'<p class="empty-msg">Nenhum objetivo cadastrado ainda.</p>':
+      data.objetivos.map(o=>objetivoCard(o,readOnly)).join('')}
+    ${readOnly?'':`
+    <p class="section-lbl" style="margin-top:16px;">Novo objetivo</p>
+    <div class="small-form">
+      <input id="obj_nome" placeholder="Nome (ex: Viagem para o Nordeste)"/>
+      <select id="obj_tipo">
+        <option value="Viagem">Viagem</option>
+        <option value="Aquisição">Aquisição</option>
+        <option value="Pessoal">Pessoal</option>
+      </select>
+      <input id="obj_alvo" type="number" placeholder="Valor alvo (R$)" step="0.01"/>
+      <input id="obj_atual" type="number" placeholder="Já guardado (R$) - opcional" step="0.01"/>
+      <button class="btn btn-primary btn-small" onclick="addObjetivo()">Adicionar</button>
+    </div>`}
+  </div>`;
+}
+function objetivoCard(o, readOnly){
+  const pct = o.valorAlvo>0 ? Math.min(100,(o.valorAtual/o.valorAlvo)*100) : 0;
+  return `<div class="obj-card">
+    <div class="obj-head">
+      <span class="obj-title">${o.nome} <span class="obj-type">${o.tipo}</span></span>
+      ${readOnly?'':`<button class="del-btn" onclick="delObjetivo('${o.id}')">✕</button>`}
+    </div>
+    <div class="progress-outer"><div class="progress-inner" style="width:${pct}%;background:${barColor(pct,true)}"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:12.5px;color:var(--cinza-700);">
+      <span>${formatBRL(o.valorAtual)} guardado</span><span>${formatBRL(o.valorAlvo)} meta · ${pct.toFixed(0)}%</span>
+    </div>
+    ${readOnly?'':`<div class="small-form" style="margin-top:10px;">
+      <input id="obj_add_${o.id}" type="number" placeholder="Valor a guardar (R$)" step="0.01"/>
+      <button class="btn btn-outline btn-small" style="width:auto;" onclick="atualizarObjetivo('${o.id}')">Guardar mais dinheiro</button>
+    </div>`}
+  </div>`;
+}
+async function addObjetivo(){
+  const nome = document.getElementById('obj_nome').value.trim();
+  const tipo = document.getElementById('obj_tipo').value;
+  const valorAlvo = parseFloat(document.getElementById('obj_alvo').value);
+  const valorAtualInput = document.getElementById('obj_atual').value;
+  const valorAtual = valorAtualInput ? (parseFloat(valorAtualInput)||0) : 0;
+  if(!nome || isNaN(valorAlvo)) return;
+  const id = uid();
+  const obj = {id, nome, tipo, valorAlvo, valorAtual};
+  state.data.objetivos.push(obj);
+  state.data.alertState.objetivos[id] = {50:false,75:false,90:false};
+  const pct = valorAlvo>0 ? (valorAtual/valorAlvo*100) : 0;
+  [90,75,50].forEach(th=>{
+    if(pct>=th && !state.data.alertState.objetivos[id][th]){
+      state.data.alertState.objetivos[id][th]=true;
+      queueAlert(objetivoAlertHtml(th,obj));
+    }
+  });
+  await saveStudentData(state.currentUser.email, state.data);
+  render();
+}
+async function delObjetivo(id){
+  state.data.objetivos = state.data.objetivos.filter(o=>o.id!==id);
+  delete state.data.alertState.objetivos[id];
+  await saveStudentData(state.currentUser.email, state.data);
+  render();
+}
+async function atualizarObjetivo(id){
+  const input = document.getElementById('obj_add_'+id);
+  const num = parseFloat(input.value);
+  if(isNaN(num) || num<=0) return;
+  const obj = state.data.objetivos.find(o=>o.id===id);
+  obj.valorAtual += num;
+  if(!state.data.alertState.objetivos[id]) state.data.alertState.objetivos[id]={50:false,75:false,90:false};
+  const pct = obj.valorAlvo>0 ? (obj.valorAtual/obj.valorAlvo*100) : 0;
+  [90,75,50].forEach(th=>{
+    if(pct>=th && !state.data.alertState.objetivos[id][th]){
+      state.data.alertState.objetivos[id][th]=true;
+      queueAlert(objetivoAlertHtml(th,obj));
+    }
+  });
+  await saveStudentData(state.currentUser.email, state.data);
+  render();
+}
+function objetivoAlertHtml(th,obj){
+  const texto = th>=90 ? `Uau! Você já alcançou ${th}% ou mais da meta "${obj.nome}". Está quase lá!`
+    : th>=75 ? `Muito bem! Você já alcançou ${th}% ou mais da meta "${obj.nome}". Continue assim!`
+    : `Parabéns! Você já alcançou ${th}% ou mais da meta "${obj.nome}". Metade do caminho percorrido!`;
+  return `<div class="modal-icon">🎉</div><h3 class="modal-title" style="color:var(--verde-700)">Meta em progresso: ${th}%</h3><p class="modal-text">${texto}</p>`;
+}
+
+/* ================= PROFESSOR ================= */
+function renderProfessor(){
+  if(state.teacherViewing && state.teacherViewingData){
+    const d = state.teacherViewingData;
+    return `
+    <div class="card">
+      <button class="btn btn-dark btn-small" style="width:auto;" onclick="teacherBack()">← Voltar para a lista de alunos</button>
+      <p class="card-title" style="margin-top:14px;">👤 ${d.profile.name} <span style="font-weight:400;font-size:12px;color:var(--cinza-500);">(${d.profile.email})</span></p>
+    </div>
+    ${renderPatrimonio(d, true)}
+    ${renderFinancas(d, true)}
+    ${renderObjetivos(d, true)}
+    `;
+  }
+  return `<div class="card"><p class="card-title">👨‍🏫 Painel do Professor</p><p class="hint">Selecione um aluno para visualizar todo o conteúdo lançado por ele (patrimônio, receitas, despesas e objetivos).</p>
+  <div id="teacherList" style="margin-top:14px;">Carregando alunos...</div></div>`;
+}
+async function loadTeacherList(){
+  const holder = document.getElementById('teacherList');
+  if(!holder) return;
+  const users = await getUsers();
+  const alunos = users.filter(u=>u.email.toLowerCase()!==TEACHER_EMAIL);
+  if(alunos.length===0){ holder.innerHTML = '<p class="empty-msg">Nenhum aluno cadastrado ainda.</p>'; return; }
+  holder.innerHTML = alunos.map(a=>`<div class="teacher-row" onclick="teacherView('${a.email}')"><span><b>${a.nome}</b><br><span style="font-size:12px;color:var(--cinza-500);">${a.email}</span></span><span>›</span></div>`).join('');
+}
+async function teacherView(email){
+  const d = await getStudentData(email);
+  state.teacherViewing = email;
+  state.teacherViewingData = d || defaultStudentData(email, email);
+  render();
+}
+function teacherBack(){ state.teacherViewing = null; state.teacherViewingData = null; render(); }
+
+/* ================= ALERT MODAL QUEUE ================= */
+function queueAlert(html){ alertQueue.push(html); if(alertQueue.length===1) showModal(); }
+function showModal(){
+  const holder = document.getElementById('modalHolder');
+  if(!holder || alertQueue.length===0) return;
+  holder.innerHTML = `<div class="modal-overlay"><div class="modal-box">${alertQueue[0]}<button class="btn btn-primary" onclick="closeModal()">Entendi</button></div></div>`;
+}
+function closeModal(){
+  alertQueue.shift();
+  const holder = document.getElementById('modalHolder');
+  if(holder) holder.innerHTML = '';
+  if(alertQueue.length>0) setTimeout(showModal,150);
+}
+
+/* hook: whenever we re-render professor list view, reload it */
+const _origRender = render;
+render = function(){
+  _origRender();
+  if(state.currentUser && state.currentUser.isTeacher && state.activeTab==='professor' && !state.teacherViewing){
+    loadTeacherList();
+  }
+  if(state.currentUser && state.activeTab==='financas'){
+    runGastoCheck();
+  }
+};
+
+/* ================= INIT ================= */
+function boot(){
+  if(!firebaseReady){
+    document.getElementById('app').innerHTML = `
+      <div class="login-wrap">
+        <div class="login-card">
+          <h1 class="login-brand" style="color:var(--vermelho);">Configuração pendente</h1>
+          <p class="login-sub" style="text-transform:none;">Este aplicativo ainda não foi conectado a um banco de dados.</p>
+          <p class="hint" style="text-align:left;">Abra o arquivo HTML, localize o bloco "firebaseConfig" no topo do código e cole os dados do seu projeto Firebase, seguindo o passo a passo que o professor recebeu. Depois é só salvar e publicar novamente.</p>
+        </div>
+      </div>`;
+    return;
+  }
+  render();
+}
+boot();
+</script>
+</body>
+</html>
